@@ -4,6 +4,7 @@ import Conversation from "../../components/conversations/Conversation";
 import Message from "../../components/message/Message";
 import ChatOnline from "../../components/chatOnline/ChatOnline";
 import { useContext, useEffect, useRef, useState } from "react";
+import FileBase from 'react-file-base64';
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { io } from "socket.io-client";
@@ -15,6 +16,7 @@ export default function Messenger() {
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [image, setImage] = useState('');
   const [friends, setFriends] = useState([]);
   const socket = useRef();
   const { user } = useContext(AuthContext);
@@ -79,7 +81,8 @@ export default function Messenger() {
       sender: user._id,
       text: newMessage,
       conversationId: currentChat._id,
-      byDoc: user.isDoc
+      byDoc: user.isDoc,
+      image: image
     };
 
     const receiverId = currentChat.members.find(
@@ -137,6 +140,11 @@ export default function Messenger() {
                     onChange={(e) => setNewMessage(e.target.value)}
                     value={newMessage}
                   ></textarea>
+                  <FileBase
+                        type='file'
+                        multiple={false}
+                        onDone={({base64}) => setImage(base64)}
+                    />
                   <button className="chatSubmitButton" onClick={handleSubmit}>
                     Send
                   </button>

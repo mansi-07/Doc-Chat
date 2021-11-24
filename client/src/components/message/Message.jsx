@@ -15,7 +15,17 @@ export default function Message({ message, own }) {
           }
           alt=""
         />
-        <p className="messageText">{message.text}</p>
+        
+        {
+          message.text ? 
+          <p className="messageText">{message.text}</p>
+          : null
+        }
+        {
+          message.image ? 
+          <img src={message.image} alt="" style={{width: "100px", height: "100px"}}/>
+          : null
+        }
       </div>
       <div className="messageBottom">{format(message.createdAt)}</div>
     </div>
