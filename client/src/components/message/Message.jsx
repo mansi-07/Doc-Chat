@@ -23,7 +23,7 @@ export default function Message({ message, own }) {
         }
         {
           message.image ? 
-          <img src={message.image} alt="" style={{width: "100px", height: "100px"}}/>
+          <img src={message.image} alt="" style={{width: "200px", height: "200px"}}/>
           : null
         }
       </div>
