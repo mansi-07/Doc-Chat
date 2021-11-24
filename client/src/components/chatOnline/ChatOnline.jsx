@@ -36,7 +36,7 @@ export default function ChatOnline({ currentId, setCurrentChat }) {
               src={
                 o?.profilePicture
                   ? PF + o.profilePicture
-                  : PF + "person/noAvatar.png"
+                  : PF + "person/docAvatar.png"
               }
               alt=""
             />

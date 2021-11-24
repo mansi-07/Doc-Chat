@@ -79,6 +79,7 @@ export default function Messenger() {
       sender: user._id,
       text: newMessage,
       conversationId: currentChat._id,
+      byDoc: user.isDoc
     };
 
     const receiverId = currentChat.members.find(
@@ -88,7 +89,7 @@ export default function Messenger() {
     socket.current.emit("sendMessage", {
       senderId: user._id,
       receiverId,
-      text: newMessage,
+      text: newMessage
     });
 
     try {

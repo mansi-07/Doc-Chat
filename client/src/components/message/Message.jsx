@@ -8,7 +8,11 @@ export default function Message({ message, own }) {
       <div className="messageTop">
         <img
           className="messageImg"
-          src={PF + "person/noAvatar.png"}
+          src={
+            message?.byDoc
+              ? PF + "person/docAvatar.png"
+              : PF + "person/noAvatar.png"
+          }
           alt=""
         />
         <p className="messageText">{message.text}</p>
