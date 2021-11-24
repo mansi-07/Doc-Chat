@@ -24,6 +24,9 @@ export default function Topbar() {
         </div>
       </div>
       <div className="topbarRight">
+        <div className="topbarLinks">
+          <span className="topbarLink">{user.username}</span>
+        </div>
         <Link to={`/profile/${user.username}`}>
           <img
             src={
@@ -34,6 +37,7 @@ export default function Topbar() {
             alt=""
             className="topbarImg"
           />
+          
         </Link>
       </div>
     </div>
