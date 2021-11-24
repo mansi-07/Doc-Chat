@@ -11,11 +11,11 @@ import { io } from "socket.io-client";
 export default function Messenger() {
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
-  const [currentReceiver, setCurrentReceiver] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [friends, setFriends] = useState([]);
   const socket = useRef();
   const { user } = useContext(AuthContext);
   const scrollRef = useRef();
@@ -31,24 +31,11 @@ export default function Messenger() {
     });
   }, []);
 
-  useEffect(()=>{
-    try {
-      const res = axios.get(
-        `/conversations/find/${user._id}/${currentReceiver}`
-      );
-      setCurrentChat(res)
-    } catch (err) {
-      console.log(err);
-    }
-  }, [currentReceiver, user])
-
   useEffect(() => {
-    arrivalMessage && currentChat &&
-    currentChat.members.includes(arrivalMessage.sender) &&
+    arrivalMessage &&
+      currentChat?.members.includes(arrivalMessage.sender) &&
       setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, currentChat]);
-
-  const [friends, setFriends] = useState([]);
 
   useEffect(() => {
     const getFriends = async () => {
@@ -57,15 +44,10 @@ export default function Messenger() {
     };
     getFriends();
   }, []);
-  
+
   useEffect(() => {
-    socket.current.emit("addUser", user._id, user._id);
-    socket.current.on("getUsers", (users) => {
-      setOnlineUsers(
-        friends.filter((f) => users.some((u) => u.userId === f))
-      );
-    });
-  }, [friends,user]);
+    socket.current.emit("addUser", user._id);
+  }, [user]);
 
   useEffect(() => {
     const getConversations = async () => {
@@ -82,8 +64,8 @@ export default function Messenger() {
   useEffect(() => {
     const getMessages = async () => {
       try {
-        const result = await axios.get("/messages/" + currentChat._id);
-        setMessages(result.data);
+        const res = await axios.get("/messages/" + currentChat._id);
+        setMessages(res.data);
       } catch (err) {
         console.log(err);
       }
@@ -99,9 +81,13 @@ export default function Messenger() {
       conversationId: currentChat._id,
     };
 
+    const receiverId = currentChat.members.find(
+      (member) => member !== user._id
+    );
+
     socket.current.emit("sendMessage", {
       senderId: user._id,
-      receiverId: currentReceiver,
+      receiverId,
       text: newMessage,
     });
 
@@ -134,7 +120,7 @@ export default function Messenger() {
         </div>
         <div className="chatBox">
           <div className="chatBoxWrapper">
-            {currentReceiver ? (
+            {currentChat ? (
               <>
                 <div className="chatBoxTop">
                   {messages.map((m) => (
@@ -167,7 +153,7 @@ export default function Messenger() {
             <ChatOnline
               onlineUsers={onlineUsers}
               currentId={user._id}
-              setCurrentReceiver={setCurrentReceiver}
+              setCurrentChat={setCurrentChat}
             />
           </div>
         </div>

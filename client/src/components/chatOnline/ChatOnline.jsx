@@ -2,31 +2,25 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import "./chatOnline.css";
 
-export default function ChatOnline({ onlineUsers, currentId, setCurrentReceiver }) {
+export default function ChatOnline({ currentId, setCurrentChat }) {
   const [friends, setFriends] = useState([]);
-  const [onlineFriends, setOnlineFriends] = useState([]);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
-  useEffect(() => {
+ useEffect(() => {
     const getFriends = async () => {
       const res = await axios.get("/users/userlist");
       setFriends(res.data);
     };
-
     getFriends();
   }, [currentId]);
 
-  useEffect(() => {
-    setOnlineFriends(friends.filter((f) => onlineUsers.includes(f._id)));
-  }, [friends, onlineUsers]);
 
   const handleClick = async (user) => {
     try {
-      const res = await axios.get(
+      const res = await axios.post(
         `/conversations/find/${currentId}/${user._id}`
       );
-      console.log(res)
-      setCurrentReceiver(user._id);
+      setCurrentChat(res.data);
     } catch (err) {
       console.log(err);
     }
@@ -46,8 +40,9 @@ export default function ChatOnline({ onlineUsers, currentId, setCurrentReceiver 
               }
               alt=""
             />
+            <div className="chatOnlineBadge"></div>
           </div>
-          <span className="chatOnlineName">{o.username}</span>
+          <span className="chatOnlineName">{o?.username}</span>
           <span className="chatOnlinedesc"><br/>{o.desc}</span>
         </div>
       ))}
