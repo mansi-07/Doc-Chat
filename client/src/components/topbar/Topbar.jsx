@@ -14,15 +14,7 @@ export default function Topbar() {
           <span className="logo">Doc-Chat</span>
         </Link>
       </div>
-      <div className="topbarCenter">
-        <div className="searchbar">
-          <Search className="searchIcon" />
-          <input
-            placeholder="Search for doctors"
-            className="searchInput"
-          />
-        </div>
-      </div>
+      <div className="topbarCenter"></div>
       <div className="topbarRight">
         <div className="topbarLinks">
           <span className="topbarLink">{user.username}</span>
